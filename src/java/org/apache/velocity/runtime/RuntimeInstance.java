@@ -1056,6 +1056,10 @@ public class RuntimeInstance implements RuntimeConstants, RuntimeServices
      * Initializes the Velocity filters manager.
      */
     private void initializeFilters() {
+        /**
+         * In case the developer did not add velocoty.filtersmanager attribute
+         * we catch the exception to make velocity act normally
+         */
         try {
             String classFilter = (String) overridingProperties.getProperty("velocity.filtersmanager");
 
@@ -1063,7 +1067,7 @@ public class RuntimeInstance implements RuntimeConstants, RuntimeServices
                 filtersManager = (FiltersManager) Class.forName(classFilter).newInstance();
             }
         } catch (Exception x) {
-            throw new VelocityException("Error initializing log: " + x.getMessage(), x);
+            //throw new VelocityException("Error initializing log: " + x.getMessage(), x);
         }
     }
     
