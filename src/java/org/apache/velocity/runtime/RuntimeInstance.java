@@ -165,6 +165,11 @@ public class RuntimeInstance implements RuntimeConstants, RuntimeServices
      * copy of it is passed to parsers.
      */
     private Map runtimeDirectivesShared;
+    
+    /**
+     * Handles Filters Manager.
+     */
+    private FiltersManager filtersManager = null;
 
     /**
      * Object that houses the configuration options for
@@ -262,6 +267,7 @@ public class RuntimeInstance implements RuntimeConstants, RuntimeServices
             initializeLog();
             initializeResourceManager();
             initializeDirectives();
+            initializeFilters();
             initializeEventHandlers();
             initializeParserPool();
 
@@ -1046,6 +1052,28 @@ public class RuntimeInstance implements RuntimeConstants, RuntimeServices
         }
     }
 
+    /**
+     * Initializes the Velocity filters manager.
+     */
+    private void initializeFilters() {
+        try {
+            String classFilter = (String) overridingProperties.getProperty("velocity.filtersmanager");
+
+            if (classFilter != null) {
+                filtersManager = (FiltersManager) Class.forName(classFilter).newInstance();
+            }
+        } catch (Exception x) {
+            throw new VelocityException("Error initializing log: " + x.getMessage(), x);
+        }
+    }
+    
+    /**
+     * Retrieve a previously instantiated filtersManager.
+     * @return filters manager
+     */
+    public FiltersManager getFiltersManager() {
+        return filtersManager;
+    }
 
     /**
      * Initializes the Velocity parser pool.

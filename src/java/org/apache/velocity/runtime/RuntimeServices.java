@@ -517,4 +517,11 @@ public interface RuntimeServices extends RuntimeLogger
      */
     public Directive getDirective(String name);
 
+    /**
+     * Retrieve a previously instantiated class filter.
+     * @return the instantiated class filter, if any
+     * @since 1.7.1
+     */
+    public FiltersManager getFiltersManager();
+
 }
