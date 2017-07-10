@@ -117,13 +117,20 @@ public class ASTIdentifier extends SimpleNode
         throws MethodInvocationException
     {
         /**
-         * This snippet of code is going to verify that filters manager was declared first,
-         * then passes the class name of the object to filters manager,
-         * then filters manager is going to execute the custom implementation of the developer
-         * to filter the process.
+         * In case the developer did not add velocoty.filtersmanager attribute
+         * we catch the exception to make velocity act normally
          */
-        if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
-            return null;
+        try{
+            /**
+             * This snippet of code is going to verify that filters manager was declared first,
+             * then passes the class name of the object to filters manager,
+             * then filters manager is going to execute the custom implementation of the developer
+             * to filter the process.
+             */
+            if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
+                return null;
+            }     
+        } catch (Exception e) {
         }
         
         VelPropertyGet vg = null;
