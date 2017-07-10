@@ -11,6 +11,7 @@ import org.apache.velocity.runtime.directive.Macro;
 import org.apache.velocity.runtime.directive.MacroParseException;
 import org.apache.velocity.util.StringUtils;
 import org.apache.commons.lang.text.StrBuilder;
+import org.apache.velocity.runtime.FiltersManager;
 import org.apache.velocity.runtime.RuntimeConstants;
 
 /**
@@ -153,6 +154,14 @@ public class Parser/*@bgen(jjtree)*/implements ParserTreeConstants, ParserConsta
     public Directive getDirective(String directive)
     {
         return (Directive) rsvc.getDirective(directive);
+    }
+
+    /**
+     *  This method gives the access to velocity filters manager
+     */
+    public FiltersManager getFiltersManager()
+    {
+        return rsvc.getFiltersManager();
     }
 
     /**

@@ -116,7 +116,16 @@ public class ASTIdentifier extends SimpleNode
     public Object execute(Object o, InternalContextAdapter context)
         throws MethodInvocationException
     {
-
+        /**
+         * This snippet of code is going to verify that filters manager was declared first,
+         * then passes the class name of the object to filters manager,
+         * then filters manager is going to execute the custom implementation of the developer
+         * to filter the process.
+         */
+        if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
+            return null;
+        }
+        
         VelPropertyGet vg = null;
 
         try
