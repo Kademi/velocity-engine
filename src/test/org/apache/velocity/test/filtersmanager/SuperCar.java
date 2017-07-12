@@ -17,7 +17,7 @@ package org.apache.velocity.test.filtersmanager;
 
 /**
  *
- * @author M.S.I
+ * @author Mohammed F. Ouda
  */
 public class SuperCar extends Car {
 

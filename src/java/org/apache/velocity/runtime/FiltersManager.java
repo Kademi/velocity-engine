@@ -36,6 +36,8 @@ import jdk.nashorn.api.scripting.ClassFilter;
  * e.g.: VelocityEngine ve = new VelocityEngine();
  * ve.addProperty("velocity.filtersmanager",
  * "com.velocity.test.FiltersManager"); ve.init();
+ * 
+ * @author Mohammed F. Ouda
  */
 public interface FiltersManager {
 

@@ -50,6 +50,8 @@ import org.apache.velocity.test.BaseTestCase;
  *        are not accessible from velocity by default.
  * 
  *  ---#10 test cases---
+ * 
+ * @author Mohammed F. Ouda
  */
 public class FiltersManagerTestCase extends BaseTestCase {
     

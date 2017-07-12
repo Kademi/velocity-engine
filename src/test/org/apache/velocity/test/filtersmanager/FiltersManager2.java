@@ -20,7 +20,7 @@ import jdk.nashorn.api.scripting.ClassFilter;
 
 /**
  *
- * @author M.S.I
+ * @author Mohammed F. Ouda
  */
 public class FiltersManager2 implements org.apache.velocity.runtime.FiltersManager {
 
