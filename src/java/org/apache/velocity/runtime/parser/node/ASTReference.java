@@ -245,9 +245,11 @@ public class ASTReference extends SimpleNode
          * then filters manager is going to execute the custom implementation of the developer
          * to filter the process.
          */
-        if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(result.getClass().getName())) {
-            return null;
-        }    
+        if(result != null){
+            if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(result.getClass().getName())) {
+                return null;
+            }    
+        }
         
         if (result == null && !strictRef)
         {

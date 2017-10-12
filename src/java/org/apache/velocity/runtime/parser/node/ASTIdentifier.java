@@ -122,6 +122,11 @@ public class ASTIdentifier extends SimpleNode
          * then filters manager is going to execute the custom implementation of the developer
          * to filter the process.
          */
+        //Safety check
+        if(o == null){
+            return null;
+        }
+        
         if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
             return null;
         }     

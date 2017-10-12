@@ -133,6 +133,11 @@ public class ASTMethod extends SimpleNode {
          * manager, then filters manager is going to execute the custom
          * implementation of the developer to filter the process.
          */
+        // Safety check
+        if(o == null){
+            return null;
+        }
+        
         if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
             return null;
         }
@@ -185,18 +190,20 @@ public class ASTMethod extends SimpleNode {
             }
 
             Object obj = method.invoke(o, params);
-
-            /**
-             * to verify the availability of reaching the class of requested [obj].
-             */
-            if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(obj.getClass().getName())) {
-                return null;
-            }
-
+            
+            // The method was already validated
             if (obj == null) {
                 if (method.getReturnType() == Void.TYPE) {
                     return "";
                 }
+            }
+            
+            /**
+             * to verify the availability of reaching the class of requested
+             * [obj].
+             */
+            if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(obj.getClass().getName())) {
+                return null;
             }
 
             return obj;
