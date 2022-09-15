@@ -16,9 +16,10 @@ package org.apache.velocity.runtime.parser.node;
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 import java.lang.reflect.InvocationTargetException;
+import jdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -125,6 +126,7 @@ public class ASTMethod extends SimpleNode {
      * @return Result or null.
      * @throws MethodInvocationException
      */
+    @Override
     public Object execute(Object o, InternalContextAdapter context)
             throws MethodInvocationException {
         /**
@@ -134,11 +136,11 @@ public class ASTMethod extends SimpleNode {
          * implementation of the developer to filter the process.
          */
         // Safety check
-        if(o == null){
+        if( o == null ) {
             return null;
         }
-        
-        if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName())) {
+
+        if( rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(o.getClass().getName()) ) {
             return null;
         }
 
@@ -157,16 +159,32 @@ public class ASTMethod extends SimpleNode {
         final Class[] paramClasses
                 = paramCount > 0 ? new Class[paramCount] : ArrayUtils.EMPTY_CLASS_ARRAY;
 
-        for (int j = 0; j < paramCount; j++) {
+        for( int j = 0; j < paramCount; j++ ) {
             params[j] = jjtGetChild(j + 1).value(context);
-            if (params[j] != null) {
+            if( params[j] != null ) {
                 paramClasses[j] = params[j].getClass();
             }
         }
 
-        VelMethod method = ClassUtils.getMethod(methodName, params, paramClasses,
-                o, context, this, strictRef);
-        if (method == null) {
+        if( o instanceof ScriptObjectMirror ) {
+            ScriptObjectMirror som = (ScriptObjectMirror) o;
+            Object obj = som.callMember(methodName, params);
+            if( obj == null ) {
+                return null;
+            }
+
+            /**
+             * to verify the availability of reaching the class of requested
+             * [obj].
+             */
+            if( rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(obj.getClass().getName()) ) {
+                return null;
+            }
+            return obj;
+        }
+
+        VelMethod method = ClassUtils.getMethod(methodName, params, paramClasses, o, context, this, strictRef);
+        if( method == null ) {
             return null;
         }
 
@@ -180,48 +198,48 @@ public class ASTMethod extends SimpleNode {
              *  all is well.
              */
 
-            if (method.getReturnType() != null) {
+            if( method.getReturnType() != null ) {
                 /**
                  * to make sure of the returned type filtering.
                  */
-                if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(method.getReturnType().getName())) {
+                if( rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(method.getReturnType().getName()) ) {
                     return null;
                 }
             }
 
             Object obj = method.invoke(o, params);
-            
+
             // The method was already validated
-            if (obj == null) {
-                if (method.getReturnType() == Void.TYPE) {
+            if( obj == null ) {
+                if( method.getReturnType() == Void.TYPE ) {
                     return "";
-                }else{
+                } else {
                     return null;
                 }
             }
-            
+
             /**
              * to verify the availability of reaching the class of requested
              * [obj].
              */
-            if (rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(obj.getClass().getName())) {
+            if( rsvc.getFiltersManager() != null && !rsvc.getFiltersManager().exposeToScripts(obj.getClass().getName()) ) {
                 return null;
             }
 
             return obj;
-        } catch (InvocationTargetException ite) {
+        } catch( InvocationTargetException ite ) {
             return handleInvocationException(o, context, ite.getTargetException());
         } /**
          * Can also be thrown by method invocation *
          */
-        catch (IllegalArgumentException t) {
+        catch( IllegalArgumentException t ) {
             return handleInvocationException(o, context, t);
         } /**
          * pass through application level runtime exceptions
          */
-        catch (RuntimeException e) {
+        catch( RuntimeException e ) {
             throw e;
-        } catch (Exception e) {
+        } catch( Exception e ) {
             String msg = "ASTMethod.execute() : exception invoking method '"
                     + methodName + "' in " + o.getClass();
             log.error(msg, e);
@@ -233,7 +251,7 @@ public class ASTMethod extends SimpleNode {
         /*
          * We let StopCommands go up to the directive they are for/from
          */
-        if (t instanceof StopCommand) {
+        if( t instanceof StopCommand ) {
             throw (StopCommand) t;
         } /*
          *  In the event that the invocation of the method
@@ -241,7 +259,7 @@ public class ASTMethod extends SimpleNode {
          *  wrap it, and throw.  We don't log here as we want to figure
          *  out which reference threw the exception, so do that
          *  above
-         */ else if (t instanceof Exception) {
+         */ else if( t instanceof Exception ) {
             try {
                 return EventHandlerUtil.methodException(rsvc, context, o.getClass(), methodName, (Exception) t);
             } /**
@@ -249,7 +267,7 @@ public class ASTMethod extends SimpleNode {
              * MethodInvocationException. Don't pass through RuntimeExceptions
              * like other similar catchall code blocks.
              */
-            catch (Exception e) {
+            catch( Exception e ) {
                 throw new MethodInvocationException(
                         "Invocation of method '"
                         + methodName + "' in  " + o.getClass()
@@ -302,16 +320,16 @@ public class ASTMethod extends SimpleNode {
              * note we skip the null test for methodName and params due to the
              * earlier test in the constructor
              */
-            if (o instanceof MethodCacheKey) {
+            if( o instanceof MethodCacheKey ) {
                 final MethodCacheKey other = (MethodCacheKey) o;
-                if (params.length == other.params.length
-                        && methodName.equals(other.methodName)) {
-                    for (int i = 0; i < params.length; ++i) {
-                        if (params[i] == null) {
-                            if (params[i] != other.params[i]) {
+                if( params.length == other.params.length
+                        && methodName.equals(other.methodName) ) {
+                    for( int i = 0; i < params.length; ++i ) {
+                        if( params[i] == null ) {
+                            if( params[i] != other.params[i] ) {
                                 return false;
                             }
-                        } else if (!params[i].equals(other.params[i])) {
+                        } else if( !params[i].equals(other.params[i]) ) {
                             return false;
                         }
                     }
@@ -331,9 +349,9 @@ public class ASTMethod extends SimpleNode {
              * note we skip the null test for methodName and params due to the
              * earlier test in the constructor
              */
-            for (int i = 0; i < params.length; ++i) {
+            for( int i = 0; i < params.length; ++i ) {
                 final Class param = params[i];
-                if (param != null) {
+                if( param != null ) {
                     result = result * 37 + param.hashCode();
                 }
             }
