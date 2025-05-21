@@ -15,7 +15,7 @@
  */
 package org.apache.velocity.runtime;
 
-import jdk.nashorn.api.scripting.ClassFilter;
+import org.openjdk.nashorn.api.scripting.ClassFilter;
 
 /**
  *

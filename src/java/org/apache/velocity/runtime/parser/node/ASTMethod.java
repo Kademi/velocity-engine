@@ -19,7 +19,7 @@ package org.apache.velocity.runtime.parser.node;
  * under the License.
  */
 import java.lang.reflect.InvocationTargetException;
-import jdk.nashorn.api.scripting.ScriptObjectMirror;
+import org.openjdk.nashorn.api.scripting.ScriptObjectMirror;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;

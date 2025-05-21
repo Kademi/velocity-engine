@@ -33,7 +33,7 @@
 
     <groupId>org.apache.velocity</groupId>
     <artifactId>velocity</artifactId>
-    <version>1.7.2.k03</version>
+    <version>1.7.2.k04</version>
 
     <name>Apache Velocity</name>
     <url>http://velocity.apache.org/engine/devel/</url>
@@ -72,9 +72,9 @@
 
     <distributionManagement>
         <repository>
-            <id>central</id>
-            <name>a0glkgfeusb7f-artifactory-primary-0-releases</name>
-            <url>https://kademi.jfrog.io/artifactory/kademi-libs-release-local</url>
+            <id>kademi-codeartifact</id>
+            <name>kademi-codeartifact</name>
+            <url>https://kademi-repository-826388764847.d.codeartifact.us-east-1.amazonaws.com/maven/kademi-releases</url>
         </repository>
     </distributionManagement>
 
@@ -217,6 +217,11 @@
             <version>1.7.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.openjdk.nashorn</groupId>
+            <artifactId>nashorn-core</artifactId>
+            <version>15.6</version>
+        </dependency>
     </dependencies>
 
     <reporting>
@@ -328,8 +333,8 @@
 
     <properties>
         <jira.browse.url>https://issues.apache.org/jira/browse</jira.browse.url>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>24</maven.compiler.source>
+        <maven.compiler.target>24</maven.compiler.target>
     </properties>
 
     <issueManagement>
